@@ -1,4 +1,5 @@
-/*COVID data exploration*/
+COVID data exploration*
+=======================
 
 --World: 7 Days Moving Average of New Cases per Million
 Select location, date, new_cases_per_million, AVG(new_cases_per_million) OVER(ORDER BY Date

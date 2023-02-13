@@ -1,5 +1,8 @@
 COVID Data Exploration
 =====================
+
+<img width="700" alt="image" src="https://user-images.githubusercontent.com/122644015/218378726-b66f7dea-55bc-4a19-b901-30e3e8d5a3fb.png">
+
 Data Source
 -----------------
 [Our World in Data](https://ourworldindata.org/covid-deaths)  

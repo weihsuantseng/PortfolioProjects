@@ -13,11 +13,6 @@ The variables I focused on includes: States, FacilityName, ServiceCategory, Serv
 Before creating a visualization in Tableau, let's perform some data cleaning using SQL server!  
 
 
-3. Fix structural errors
-4. Handle missing data
-1. Remove irrelevant data
-2. Remove duplicate data
-
 Result
 ----------------
 1. Fill in the facility name with the same address and fill in the phone number with the same facility name

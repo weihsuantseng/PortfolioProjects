@@ -13,10 +13,10 @@ The variables I focused on includes: States, FacilityName, ServiceCategory, Serv
 Before creating a visualization in Tableau, let's perform some data cleaning using SQL server!  
 
 
-Result
+Result <sub>．[SQL scripts](https://github.com/weihsuantseng/PortfolioProjects/blob/main/SQL-Data%20Cleaning%20of%20Hepatitis%20NYC/SQL%20code-%20Hepatitis%20NYC.sql) ．[Tableau](https://public.tableau.com/app/profile/wei.hsuan.tseng/viz/HepatitsBCNewYork/22)</sub>
 ----------------
-．[SQL scripts](https://github.com/weihsuantseng/PortfolioProjects/blob/main/SQL-Data%20Cleaning%20of%20Hepatitis%20NYC/SQL%20code-%20Hepatitis%20NYC.sql)  
-．[Tableau](https://public.tableau.com/app/profile/wei.hsuan.tseng/viz/HepatitsBCNewYork/22)  
+  
+
 **1. Fill in the facility name with the same address and fill in the phone number with the same facility name**
 ```sql
 update a

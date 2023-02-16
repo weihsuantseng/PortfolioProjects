@@ -12,6 +12,13 @@ I want to create a map that shows the locations of hepatitis services in New Yor
 The variables I focused on includes: States, FacilityName, ServiceCategory, ServiceType, Address, Country, Postcode, Phone Number, Payment/Cost.  
 Before creating a visualization in Tableau, let's perform some data cleaning using SQL server!  
 
+1. Fill in missing values  
+2. Clean messy string  
+3. Data aggregation  
+4. Remove duplicate data  
+5. Remove missing values  
+6. Remove irrevelant data  
+
 
 Result <sub>．[SQL scripts](https://github.com/weihsuantseng/PortfolioProjects/blob/main/SQL-Data%20Cleaning%20of%20Hepatitis%20NYC/SQL%20code-%20Hepatitis%20NYC.sql) ．[Tableau](https://public.tableau.com/app/profile/wei.hsuan.tseng/viz/HepatitsBCNewYork/22)</sub>
 ----------------

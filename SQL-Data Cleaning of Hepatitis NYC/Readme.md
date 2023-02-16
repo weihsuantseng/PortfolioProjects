@@ -198,7 +198,7 @@ WHERE "Phone Number"='(718) 583-5150 / 718-466-8244'
 </details>
 
 **4. Do data aggregation in Payment/Cos. Create a new variable FreeHep,   
-if payment contains free option then returns 'yes', if not returns 'no', else returns 'unknown'.**
+if payment contains free option then returns 'yes', if not, returns 'no', else returns 'unknown'.**
 ```sql
 ALTER TABLE PortfolioProject.dbo.HepatitisNYC
 ADD FreeHep nvarchar(255)
@@ -213,7 +213,8 @@ FROM PortfolioProject.dbo.HepatitisNYC
 
 **5. The forms of Address looks messy. I observe several problems:**  
 ．There are 'n/a' and NULL  
-．Different forms of Floor: 1 st Floor, 1F, 1 floor, 1 Floor  
+．Different forms of Floor: 1 st Floor, 1F, 1 floor, 1 Floor 
+．Different forms of #: # 307, Room# 336
 ．Some first characters in the string are uppercase, some are lowercase  
 
 *5-1 Breaking out Address into Individual Columns (Address, apartment/suite number)*
@@ -262,7 +263,8 @@ CREATE FUNCTION [dbo].[InitCap] ( @InputString varchar(4000) )
 RETURNS VARCHAR(4000)
 AS
 BEGIN
-ˋˋˋ
+```
+
 
 Step 2: Define variables and specify their data type
 ```sql
@@ -288,4 +290,57 @@ BEGIN
     SET @Char     = SUBSTRING(@InputString, @Index, 1)
     SET @PrevChar = CASE WHEN @Index = 1 THEN ' '
                          ELSE SUBSTRING(@InputString, @Index - 1, 1)
+```
+
+Step 5: IF checks whether the previous character is a space, comma, or hyphen.  
+If it is, then it uses the SQL Server "STUFF" function to replace the current character with its uppercase equivalent in the output string
+```sql
+IF @PrevChar IN (' ', ',','-')
+    BEGIN
+            SET @OutputString = STUFF(@OutputString, @Index, 1, UPPER(@Char))
+    END
+    ```
+    
+Step 6: Iterate over the individual words in the input string.  
+The loop initializes @Index to 1 and increments it by 1 on each iteration until all the words have been processed.  
+The RETURN @OutputString statement indicates that the final output string should be returned when the function is called.  
+The GO statement marks the end of the T-SQL batch and is used to separate batches within a script.
+```sql
+SET @Index = @Index + 1
+END
+RETURN @OutputString
+END
+GO
+```
+Step 7: Apply the function to AddressSplitAddress and AddressSplitSuite
+```sql
+UPDATE PortfolioProject.dbo.HepatitisNYC
+SET AddressSplitSuite = [dbo].[InitCap] ( [AddressSplitSuite] ), AddressSplitAddress = [dbo].[InitCap] ( [AddressSplitAddress] )
+```
+
+*6. Remove duplicate data*
+```sql
+Select FacilityName, "Service Type", Address, "Phone Number", ROW_NUMBER() over (partition by FacilityName, "Service Type", Address, "Phone Number" order by FacilityName) rownum
+From PortfolioProject.dbo.HepatitisNYC
+order by rownum desc
+
+WITH CTE AS (
+SELECT *, ROW_NUMBER() over (partition by FacilityName, "Service Type", Address, "Phone Number" order by FacilityName) as rownum
+FROM PortfolioProject.dbo.HepatitisNYC
+)
+DELETE FROM CTE 
+WHERE rownum >1
+```
+
+*7. Remove missing value in Facility name*
+```sql
+DELETE FROM PortfolioProject.dbo.HepatitisNYC
+WHERE FacilityName IS NULL OR FacilityName = ''
+```
+
+
+*8. Remove irrevelant data*
+```sql
+ALTER TABLE PortfolioProject.dbo.HepatitisNYC
+DROP COLUMN Address, [Address 2], AdditionalInfo, [Special Populations Served], [Community Board], [City Council], [Census Tract], BIN, BBL 
 ```

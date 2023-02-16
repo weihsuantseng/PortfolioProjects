@@ -299,8 +299,8 @@ IF @PrevChar IN (' ', ',','-')
     BEGIN
             SET @OutputString = STUFF(@OutputString, @Index, 1, UPPER(@Char))
     END
-    ```
-    
+```
+
 Step 6: Iterate over the individual words in the input string.  
 The loop initializes @Index to 1 and increments it by 1 on each iteration until all the words have been processed.  
 The RETURN @OutputString statement indicates that the final output string should be returned when the function is called.  
@@ -312,13 +312,14 @@ RETURN @OutputString
 END
 GO
 ```
+
 Step 7: Apply the function to AddressSplitAddress and AddressSplitSuite
 ```sql
 UPDATE PortfolioProject.dbo.HepatitisNYC
 SET AddressSplitSuite = [dbo].[InitCap] ( [AddressSplitSuite] ), AddressSplitAddress = [dbo].[InitCap] ( [AddressSplitAddress] )
 ```
 
-*6. Remove duplicate data*
+**6. Remove duplicate data**
 ```sql
 Select FacilityName, "Service Type", Address, "Phone Number", ROW_NUMBER() over (partition by FacilityName, "Service Type", Address, "Phone Number" order by FacilityName) rownum
 From PortfolioProject.dbo.HepatitisNYC
@@ -332,14 +333,14 @@ DELETE FROM CTE
 WHERE rownum >1
 ```
 
-*7. Remove missing value in Facility name*
+**7. Remove missing value in Facility name**
 ```sql
 DELETE FROM PortfolioProject.dbo.HepatitisNYC
 WHERE FacilityName IS NULL OR FacilityName = ''
 ```
 
 
-*8. Remove irrevelant data*
+**8. Remove irrevelant data**
 ```sql
 ALTER TABLE PortfolioProject.dbo.HepatitisNYC
 DROP COLUMN Address, [Address 2], AdditionalInfo, [Special Populations Served], [Community Board], [City Council], [Census Tract], BIN, BBL 

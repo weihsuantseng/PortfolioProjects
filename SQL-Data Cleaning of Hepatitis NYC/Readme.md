@@ -15,6 +15,7 @@ Before creating a visualization in Tableau, let's perform some data cleaning usi
 
 Result
 ----------------
+．SQL scripts ．[Tableau](https://public.tableau.com/app/profile/wei.hsuan.tseng/viz/HepatitsBCNewYork/22)
 **1. Fill in the facility name with the same address and fill in the phone number with the same facility name**
 ```sql
 update a

@@ -99,7 +99,7 @@ Where "Phone Number" = '(212) 239-6586'
 
 
 
-**3. The format of phone number looks messy. I want to uniform the format to (xxx) xxx-xxxx**
+**3. The format of phone number looks messy. I want to uniform the forms to (xxx) xxx-xxxx**
 
 *3-1 Change Phone Number XXXXXXXXXX into (XXX) XXX-XXXX*
 ```sql
@@ -197,5 +197,95 @@ WHERE "Phone Number"='(718) 583-5150 / 718-466-8244'
 </p>
 </details>
 
+**4. Do data aggregation in Payment/Cos. Create a new variable FreeHep,   
+if payment contains free option then returns 'yes', if not returns 'no', else returns 'unknown'.**
+```sql
+ALTER TABLE PortfolioProject.dbo.HepatitisNYC
+ADD FreeHep nvarchar(255)
 
+Update PortfolioProject.dbo.HepatitisNYC
+SET FreeHep = case when [Payment/Cost] Like '%Free%' then 'Yes'
+when [Payment/Cost] IS NULL then 'Unknown'
+Else 'No'
+END
+FROM PortfolioProject.dbo.HepatitisNYC
+```
 
+**5. The forms of Address looks messy. I observe several problems:**  
+．There are 'n/a' and NULL  
+．Different forms of Floor: 1 st Floor, 1F, 1 floor, 1 Floor  
+．Some first characters in the string are uppercase, some are lowercase  
+
+*5-1 Breaking out Address into Individual Columns (Address, apartment/suite number)*
+```sql
+ALTER TABLE PortfolioProject.dbo.HepatitisNYC
+ADD AddressSplitAddress nvarchar(255), AddressSplitSuite nvarchar(255)
+
+UPDATE PortfolioProject.dbo.HepatitisNYC
+SET AddressSplitAddress = PARSENAME(REPLACE(Address, ',', '.'),2)
+Where [Address] Like '%,%'
+
+UPDATE PortfolioProject.dbo.HepatitisNYC
+SET AddressSplitAddress = Address
+Where [Address] not Like '%,%'
+
+UPDATE PortfolioProject.dbo.HepatitisNYC
+SET AddressSplitSuite = PARSENAME(REPLACE(Address, ',', '.'),1)
+Where [Address] Like '%,%'
+```
+*5-2 Replace n/a in to NULL in AddressSpliteSuite*
+```sql
+UPDATE PortfolioProject.dbo.HepatitisNYC
+SET AddressSplitSuite = replace(AddressSplitSuite,'n/a', NULL)
+Where [Address] Like '%n/a%
+```
+
+*5-3 Change '1 st floor' and '1F' to '1st Floor'  
+and Change '# 307' and 'Room# 336' to '#307' and 'Room#336'*
+```sql
+UPDATE PortfolioProject.dbo.HepatitisNYC
+Set AddressSplitSuite=REPLACE(Replace(AddressSplitSuite, '1 St Floor', '1st Floor'), '1f', '1st Floor')
+where  AddressSplitSuite IN ('1 St Floor', '1f')
+
+UPDATE PortfolioProject.dbo.HepatitisNYC
+Set AddressSplitSuite=REPLACE(REPLACE(AddressSplitSuite, '# ', '#'), 'Room#', 'Room #')
+where  AddressSplitSuite IN ('# 307', 'Room# 336')
+```
+
+*5-4 Make the first character of the string into uppercase*  
+The reference of the code: http://www.sql-server-helper.com/functions/initcap.aspx
+
+Step 1: Create a Function called "InitCap":  
+The function takes in a single input parameter, a varchar data type with a maximum length of 4000 characters, and returns a varchar with the same maximum length.
+```sql
+CREATE FUNCTION [dbo].[InitCap] ( @InputString varchar(4000) ) 
+RETURNS VARCHAR(4000)
+AS
+BEGIN
+ˋˋˋ
+
+Step 2: Define variables and specify their data type
+```sql
+DECLARE @Index          INT
+DECLARE @Char           CHAR(1)
+DECLARE @PrevChar       CHAR(1)
+DECLARE @OutputString   VARCHAR(255)
+```
+
+Step 3: Set the value of @OutputString to the lowercase version of the input string and the value of @Index to 1, which is the initial index value that is used to loop through the input string character
+```sql
+SET @OutputString = LOWER(@InputString)
+SET @Index = 1
+```
+
+Step 4: Create a While Loop  
+--Set the value of @Char to be the character at the current index using the SUBSTRING function
+--Set the value of @PrevChar to be the previous character in the string
+--Set the value of @PrevChar to be a space if the current character is the first character in the string
+```sql
+WHILE @Index <= LEN(@InputString)
+BEGIN
+    SET @Char     = SUBSTRING(@InputString, @Index, 1)
+    SET @PrevChar = CASE WHEN @Index = 1 THEN ' '
+                         ELSE SUBSTRING(@InputString, @Index - 1, 1)
+```

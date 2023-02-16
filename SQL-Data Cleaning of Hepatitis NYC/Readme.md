@@ -345,3 +345,7 @@ WHERE FacilityName IS NULL OR FacilityName = ''
 ALTER TABLE PortfolioProject.dbo.HepatitisNYC
 DROP COLUMN Address, [Address 2], AdditionalInfo, [Special Populations Served], [Community Board], [City Council], [Census Tract], BIN, BBL 
 ```
+
+Tableau Dashboard
+-----------------
+<img width="532" alt="image" src="https://user-images.githubusercontent.com/122644015/219272615-80302536-ec4b-478d-b1cf-a6562a2d04a1.png">

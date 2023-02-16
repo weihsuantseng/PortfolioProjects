@@ -211,10 +211,10 @@ FROM PortfolioProject.dbo.HepatitisNYC
 
 /****************************************************************
 5. The forms of Address looks messy. I observe several problems:
-¡DThere are 'n/a' and NULL  
-¡DDifferent forms of Floor: 1 st Floor, 1F, 1 floor, 1 Floor 
-¡DDifferent forms of #: # 307, Room# 336
-¡DSome first characters in the string are uppercase, some are lowercase 
+Â¡DThere are 'n/a' and NULL  
+Â¡DDifferent forms of Floor: 1 st Floor, 1F, 1 floor, 1 Floor 
+Â¡DDifferent forms of #: # 307, Room# 336
+Â¡DSome first characters in the string are uppercase, some are lowercase 
 ************************************************************************/
 --Breaking out Address into Individual Columns (Address, apartment/suite number)
 Select PARSENAME(REPLACE(Address, ',', '.'),2),

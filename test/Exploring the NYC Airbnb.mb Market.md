@@ -1,3 +1,4 @@
+$ jupyter nbconvert --to html mynotebook.ipynb
 {
  "cells": [
   {
